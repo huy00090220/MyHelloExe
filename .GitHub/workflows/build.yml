@@ -1,1 +1,26 @@
+name: Build Windows EXE
 
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build (g++)
+        shell: pwsh
+        run: |
+          choco install mingw -y
+          refreshenv
+          g++ main.cpp -o hello.exe -mwindows
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello-exe
+          path: hello.exe
